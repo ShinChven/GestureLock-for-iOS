@@ -8,16 +8,27 @@
 
 import UIKit
 
-class ViewController: UIViewController, UnlockResultDelegate {
+class ViewController: UIViewController, PatternDelegate {
 
-    func unlockSuccessed() {
-        print("success")
+    func patternMatched() {
+        print("patternMatched")
     }
 
-    func unlockFailed() {
-        print("failed")
+    func patternMatchingFailed() {
+        print("patternMatchingFailed")
     }
 
+    func patternCreatingSuccessed() {
+        print("patternCreatingSuccessed")
+    }
+
+    func patternCreatingFailed() {
+        print("patternCreatingFailed")
+    }
+
+    func patternCreatingRecorded() {
+        print("patternCreatingRecorded")
+    }
 
     @IBOutlet weak var lock: UILockView!
     @IBAction func match(sender: AnyObject) {
@@ -30,7 +41,7 @@ class ViewController: UIViewController, UnlockResultDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        lock.unlockResultDelegate = self
+        lock.patternDelegate = self
         // Do any additional setup after loading the view, typically from a nib.
     }
 

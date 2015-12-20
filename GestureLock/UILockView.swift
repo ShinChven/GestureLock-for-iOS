@@ -16,11 +16,13 @@ class UILockView: UIView {
     let viewY: CGFloat = 300.0
     let columnCount: Int = 3
     let isDrawingTrackAllowed = true
-    var unlockResultDelegate: UnlockResultDelegate?
+    var patternDelegate: PatternDelegate?
     static let ACTION_CREATING = 1
     static let ACTION_MATCHING = 2
     var action = UILockView.ACTION_MATCHING
     var matched = true
+    var isTouchingAllowed = true
+
 
     /*
     // Only override drawRect: if you perform custom drawing.
@@ -88,84 +90,90 @@ class UILockView: UIView {
 
     var selectedButtons: Array<UIButton> = Array<UIButton>()
 
-    var pointOfTouch:CGPoint?
+    var pointOfTouch: CGPoint?
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        matched = true
-        pointOfTouch = pointWithTouch(touches)
-        if let btn = buttonWithPoint(pointOfTouch!) {
-            if btn.selected == false {
-                btn.selected = true
-                self.selectedButtons.append(btn)
+        if isTouchingAllowed {
+            matched = true
+            pointOfTouch = pointWithTouch(touches)
+            if let btn = buttonWithPoint(pointOfTouch!) {
+                if btn.selected == false {
+                    btn.selected = true
+                    self.selectedButtons.append(btn)
+                }
+                self.setNeedsDisplay()
             }
-            self.setNeedsDisplay()
         }
     }
 
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        pointOfTouch = pointWithTouch(touches)
-        if let btn = buttonWithPoint(pointOfTouch!) {
-            if btn.selected == false {
-                btn.selected = true
-                self.selectedButtons.append(btn)
-            }
+        if isTouchingAllowed {
+            pointOfTouch = pointWithTouch(touches)
+            if let btn = buttonWithPoint(pointOfTouch!) {
+                if btn.selected == false {
+                    btn.selected = true
+                    self.selectedButtons.append(btn)
+                }
 
+            }
+            self.setNeedsDisplay()
+        }
+    }
+
+    func matching() {
+        let pattern = LockUtil.readPattern()
+        if pattern != nil {
+            if pattern!.count == self.selectedButtons.count {
+                var check = true
+                for var i = 0; i < self.selectedButtons.count; i++ {
+                    let btn = self.selectedButtons[i]
+                    let tag = btn.tag
+                    if pattern![i] != tag {
+                        check = false
+                        break
+                    }
+                }
+
+                if check {
+                    self.patternDelegate!.patternMatched()
+                    self.matched = true
+                } else {
+                    self.patternDelegate!.patternMatchingFailed()
+                    self.matched = false
+                }
+
+            } else {
+                self.patternDelegate!.patternMatchingFailed()
+                self.matched = false
+            }
+        } else {
+            self.patternDelegate!.patternMatchingFailed()
         }
         self.setNeedsDisplay()
     }
 
+    var recording: Array<Int> = []
+
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-
-
-        dispatch_async(dispatch_get_main_queue(), {
-            self.pointOfTouch = nil
-            self.setNeedsDisplay()
-
-            if self.action == UILockView.ACTION_MATCHING {
-                let pattern = LockUtil.readPattern()
-                if pattern != nil {
-                    if pattern!.count == self.selectedButtons.count {
-                        var check = true
-                        for var i = 0; i < self.selectedButtons.count; i++ {
-                            let btn = self.selectedButtons[i]
-                            let tag = btn.tag
-                            if pattern![i] != tag {
-                                check = false
-                                break
-                            }
-                        }
-
-                        if check {
-                            self.unlockResultDelegate!.unlockSuccessed()
-                            self.matched = false
-                        } else {
-                            self.unlockResultDelegate!.unlockFailed()
-                            self.matched = false
-                        }
-
-                    } else {
-                        self.unlockResultDelegate!.unlockFailed()
-                        self.matched = false
-                    }
-                } else {
-                    self.unlockResultDelegate!.unlockFailed()
+        if isTouchingAllowed {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.isTouchingAllowed = false
+                if self.action == UILockView.ACTION_MATCHING {
+                    self.matching()
+                } else if self.action == UILockView.ACTION_CREATING {
+                    self.recordingPattern()
                 }
+
+                // show
+                self.pointOfTouch = nil
                 self.setNeedsDisplay()
-            } else if self.action == UILockView.ACTION_CREATING {
-                var pattern = Array<Int>()
-                for var i = 0; i < self.selectedButtons.count; i++ {
-                    let btn = self.selectedButtons[i]
-                    let tag = btn.tag
-                    pattern.append(tag)
-                }
-                LockUtil.savePattern(pattern)
-
-            }
+            })
 
 
-        })
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+            () -> Void in
+            self.isTouchingAllowed = true
             for var i = 0; i < self.selectedButtons.count; i++ {
                 self.selectedButtons[i].selected = false
             }
@@ -176,6 +184,44 @@ class UILockView: UIView {
 
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         touchesEnded(touches!, withEvent: event)
+    }
+
+    func recordingPattern() {
+        if self.recording.count > 0 {
+            var checked = true
+
+            if self.recording.count > 0 {
+                if self.recording.count == self.selectedButtons.count {
+                    for var i = 0; i < self.selectedButtons.count; i++ {
+                        if self.selectedButtons[i].tag != recording[i] {
+                            checked = false
+                            break
+                        }
+                    }
+                } else {
+                    checked = false
+                }
+            } else {
+                checked = false
+            }
+
+            if checked {
+                LockUtil.savePattern(self.recording)
+                self.patternDelegate!.patternCreatingSuccessed()
+            } else {
+                self.matched = false
+                self.patternDelegate!.patternCreatingFailed()
+                self.recording.removeAll(keepCapacity: false)
+            }
+
+        } else {
+            for var i = 0; i < self.selectedButtons.count; i++ {
+                let btn = self.selectedButtons[i]
+                let tag = btn.tag
+                self.recording.append(tag)
+            }
+            self.patternDelegate!.patternCreatingRecorded()
+        }
     }
 
 
@@ -217,10 +263,16 @@ class UILockView: UIView {
 
 }
 
-protocol UnlockResultDelegate {
-    func unlockSuccessed()
+protocol PatternDelegate {
+    func patternMatched()
 
-    func unlockFailed()
+    func patternMatchingFailed()
+
+    func patternCreatingSuccessed()
+
+    func patternCreatingFailed()
+
+    func patternCreatingRecorded()
 }
 
 class LockUtil {
