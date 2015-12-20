@@ -20,6 +20,7 @@ class UILockView: UIView {
     static let ACTION_CREATING = 1
     static let ACTION_MATCHING = 2
     var action = UILockView.ACTION_MATCHING
+    var matched = true
 
     /*
     // Only override drawRect: if you perform custom drawing.
@@ -87,9 +88,12 @@ class UILockView: UIView {
 
     var selectedButtons: Array<UIButton> = Array<UIButton>()
 
+    var pointOfTouch:CGPoint?
+
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let point: CGPoint = pointWithTouch(touches)
-        if let btn = buttonWithPoint(point) {
+        matched = true
+        pointOfTouch = pointWithTouch(touches)
+        if let btn = buttonWithPoint(pointOfTouch!) {
             if btn.selected == false {
                 btn.selected = true
                 self.selectedButtons.append(btn)
@@ -99,25 +103,29 @@ class UILockView: UIView {
     }
 
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let point: CGPoint = pointWithTouch(touches)
-        if let btn = buttonWithPoint(point) {
+        pointOfTouch = pointWithTouch(touches)
+        if let btn = buttonWithPoint(pointOfTouch!) {
             if btn.selected == false {
                 btn.selected = true
                 self.selectedButtons.append(btn)
             }
-            self.setNeedsDisplay()
+
         }
+        self.setNeedsDisplay()
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+
+
         dispatch_async(dispatch_get_main_queue(), {
+            self.pointOfTouch = nil
+            self.setNeedsDisplay()
 
             if self.action == UILockView.ACTION_MATCHING {
                 let pattern = LockUtil.readPattern()
                 if pattern != nil {
                     if pattern!.count == self.selectedButtons.count {
                         var check = true
-
                         for var i = 0; i < self.selectedButtons.count; i++ {
                             let btn = self.selectedButtons[i]
                             let tag = btn.tag
@@ -129,17 +137,21 @@ class UILockView: UIView {
 
                         if check {
                             self.unlockResultDelegate!.unlockSuccessed()
+                            self.matched = false
                         } else {
                             self.unlockResultDelegate!.unlockFailed()
+                            self.matched = false
                         }
 
                     } else {
                         self.unlockResultDelegate!.unlockFailed()
+                        self.matched = false
                     }
                 } else {
                     self.unlockResultDelegate!.unlockFailed()
                 }
-            }else if self.action == UILockView.ACTION_CREATING {
+                self.setNeedsDisplay()
+            } else if self.action == UILockView.ACTION_CREATING {
                 var pattern = Array<Int>()
                 for var i = 0; i < self.selectedButtons.count; i++ {
                     let btn = self.selectedButtons[i]
@@ -151,8 +163,9 @@ class UILockView: UIView {
             }
 
 
+        })
 
-            NSThread.sleepForTimeInterval(2)
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
             for var i = 0; i < self.selectedButtons.count; i++ {
                 self.selectedButtons[i].selected = false
             }
@@ -186,7 +199,15 @@ class UILockView: UIView {
                 }
             }
 
-            UIColor.brownColor().setStroke()
+            if pointOfTouch != nil {
+                path.addLineToPoint(pointOfTouch!)
+            }
+
+            if self.matched {
+                UIColor.brownColor().setStroke()
+            } else {
+                UIColor.redColor().setStroke()
+            }
 
             path.stroke()
         }
@@ -200,5 +221,22 @@ protocol UnlockResultDelegate {
     func unlockSuccessed()
 
     func unlockFailed()
+}
+
+class LockUtil {
+
+    static let KEY_PATTERN = "pattern"
+
+    static func savePattern(pattern: Array<Int>) {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(pattern, forKey: KEY_PATTERN)
+    }
+
+    static func readPattern() -> Array<Int>? {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        var pattern: Array<Int>?
+        pattern = defaults.objectForKey(KEY_PATTERN) as? Array<Int>
+        return pattern
+    }
 }
 
