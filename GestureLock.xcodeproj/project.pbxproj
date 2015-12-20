@@ -15,6 +15,7 @@
 		12EA25611ACC3847007596B5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12EA255F1ACC3847007596B5 /* LaunchScreen.xib */; };
 		12EA256D1ACC3847007596B5 /* GestureLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EA256C1ACC3847007596B5 /* GestureLockTests.swift */; };
 		12EA25771ACC3C47007596B5 /* UILockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EA25761ACC3C47007596B5 /* UILockView.swift */; };
+		B7AEC27F45DC4D057A2CA2C2 /* LockUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AEC4C162749764A08C5C9C /* LockUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		12EA256B1ACC3847007596B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12EA256C1ACC3847007596B5 /* GestureLockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureLockTests.swift; sourceTree = "<group>"; };
 		12EA25761ACC3C47007596B5 /* UILockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILockView.swift; sourceTree = "<group>"; };
+		B7AEC4C162749764A08C5C9C /* LockUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 				12EA25551ACC3847007596B5 /* GestureLock.xcdatamodeld */,
 				12EA25511ACC3847007596B5 /* Supporting Files */,
 				12EA25761ACC3C47007596B5 /* UILockView.swift */,
+				B7AEC4C162749764A08C5C9C /* LockUtil.swift */,
 			);
 			path = GestureLock;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				12EA25771ACC3C47007596B5 /* UILockView.swift in Sources */,
 				12EA25571ACC3847007596B5 /* GestureLock.xcdatamodeld in Sources */,
 				12EA25541ACC3847007596B5 /* AppDelegate.swift in Sources */,
+				B7AEC27F45DC4D057A2CA2C2 /* LockUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -43,6 +43,26 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7wb-M8-DEU">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <state key="normal" title="record"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="122" y="102" width="45" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="record:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Hpf-du-PWA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5zf-V0-Vig">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <state key="normal" title="match"/>
+                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="123" y="147" width="43" height="30"/>
+                                </variation>
+                                <connections>
+                                    <action selector="match:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ZJq-L7-22F"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -53,6 +73,8 @@
                             <mask key="subviews">
                                 <exclude reference="ykk-DJ-mHA"/>
                                 <exclude reference="D8d-DF-ykz"/>
+                                <exclude reference="7wb-M8-DEU"/>
+                                <exclude reference="5zf-V0-Vig"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="VK5-SD-jPB"/>
@@ -69,11 +91,20 @@
                                 <include reference="E5d-Rf-hU2"/>
                             </mask>
                         </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="7wb-M8-DEU"/>
+                                <include reference="5zf-V0-Vig"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="lock" destination="D8d-DF-ykz" id="4ou-ZI-gwb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

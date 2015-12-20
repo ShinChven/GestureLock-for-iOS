@@ -8,10 +8,29 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UnlockResultDelegate {
+
+    func unlockSuccessed() {
+        print("success")
+    }
+
+    func unlockFailed() {
+        print("failed")
+    }
+
+
+    @IBOutlet weak var lock: UILockView!
+    @IBAction func match(sender: AnyObject) {
+        lock.action = UILockView.ACTION_MATCHING
+    }
+
+    @IBAction func record(sender: AnyObject) {
+        lock.action = UILockView.ACTION_CREATING
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        lock.unlockResultDelegate = self
         // Do any additional setup after loading the view, typically from a nib.
     }
 
