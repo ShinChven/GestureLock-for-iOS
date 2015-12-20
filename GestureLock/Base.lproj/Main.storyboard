@@ -55,8 +55,8 @@
                                 <exclude reference="D8d-DF-ykz"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="E5d-Rf-hU2"/>
                                 <exclude reference="VK5-SD-jPB"/>
+                                <exclude reference="E5d-Rf-hU2"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -65,8 +65,8 @@
                                 <include reference="D8d-DF-ykz"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="E5d-Rf-hU2"/>
                                 <include reference="VK5-SD-jPB"/>
+                                <include reference="E5d-Rf-hU2"/>
                             </mask>
                         </variation>
                     </view>

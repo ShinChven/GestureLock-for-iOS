@@ -15,6 +15,7 @@ class UILockView: UIView {
     let btnH:CGFloat = 74.0
     let viewY:CGFloat = 300.0
     let columnCount:Int = 3
+    let isDrawTrackAllowed = true
     
     /*
     // Only override drawRect: if you perform custom drawing.
