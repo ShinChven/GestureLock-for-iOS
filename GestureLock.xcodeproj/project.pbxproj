@@ -162,11 +162,14 @@
 		12EA25461ACC3847007596B5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "ShinChven Zhang";
 				TargetAttributes = {
 					12EA254D1ACC3847007596B5 = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 3V8234U562;
 					};
 					12EA25651ACC3847007596B5 = {
 						CreatedOnToolsVersion = 6.2;
@@ -344,6 +347,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = GestureLock/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -354,6 +358,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = GestureLock/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -413,6 +418,7 @@
 				12EA25721ACC3847007596B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		12EA25731ACC3847007596B5 /* Build configuration list for PBXNativeTarget "GestureLockTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +427,7 @@
 				12EA25751ACC3847007596B5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

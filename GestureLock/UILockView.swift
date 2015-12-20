@@ -24,7 +24,7 @@ class UILockView: UIView {
     }
     */
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         addButtons()
     }
@@ -37,19 +37,19 @@ class UILockView: UIView {
     func addButtons(){
         var height:CGFloat=0
         for var i = 0; i < self.btnCount; i++ {
-            var btn:UIButton = UIButton.buttonWithType(UIButtonType.Custom) as UIButton
+            let btn:UIButton = UIButton(type: .Custom) as UIButton
             btn.userInteractionEnabled = false
             btn.setImage(UIImage(named: "gesture_node_normal"), forState: UIControlState.Normal)
             btn.setImage(UIImage(named: "gesture_node_highlighted"), forState: UIControlState.Selected)
             
-            var row = i / self.columnCount
-            var column = i % self.columnCount
+            let row = i / self.columnCount
+            let column = i % self.columnCount
             
             // margin
-            var margin:CGFloat = ( self.frame.size.width - (CGFloat(self.columnCount) * self.btnW) ) / ( CGFloat(self.columnCount)+1.0 )
+            let margin:CGFloat = ( self.frame.size.width - (CGFloat(self.columnCount) * self.btnW) ) / ( CGFloat(self.columnCount)+1.0 )
             //            // x
-            var btnX:CGFloat = margin + CGFloat(column) * (self.btnW + margin)
-            var btnY:CGFloat = CGFloat(row) * (btnW + margin)
+            let btnX:CGFloat = margin + CGFloat(column) * (self.btnW + margin)
+            let btnY:CGFloat = CGFloat(row) * (btnW + margin)
             btn.frame = CGRectMake(btnX, btnY, self.btnW, self.btnH)
             height = btnH + btnY
             
@@ -60,14 +60,14 @@ class UILockView: UIView {
     }
     
     func pointWithTouch(touches:NSSet) -> CGPoint {
-        var touch:UITouch = touches.anyObject() as UITouch
-        var point:CGPoint = touch.locationInView(self)
+        let touch:UITouch = touches.anyObject() as! UITouch
+        let point:CGPoint = touch.locationInView(self)
         return point
     }
     
     func buttonWithPoint(point:CGPoint) -> UIButton? {
         for var i=0; i<self.subviews.count; i++ {
-            var btn:UIButton =  self.subviews[i] as UIButton
+            let btn:UIButton =  self.subviews[i] as! UIButton
             if CGRectContainsPoint(btn.frame, point) {
                 //println("\(i)")
                 return btn
@@ -77,22 +77,10 @@ class UILockView: UIView {
     }
     
     var selectedButtons:Array<UIButton> = Array<UIButton>()
-    
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        var point:CGPoint = pointWithTouch(touches)
-        if var btn = buttonWithPoint(point) {
-            if btn.selected==false {
-                btn.selected=true
-                self.selectedButtons.append(btn)
-            }
-            self.setNeedsDisplay()
-        }
-        
-    }
-    
-    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-        var point:CGPoint = pointWithTouch(touches)
-        if var btn = buttonWithPoint(point) {
+
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let point:CGPoint = pointWithTouch(touches)
+        if let btn = buttonWithPoint(point) {
             if btn.selected==false {
                 btn.selected=true
                 self.selectedButtons.append(btn)
@@ -101,8 +89,18 @@ class UILockView: UIView {
         }
     }
     
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-        
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let point:CGPoint = pointWithTouch(touches)
+        if let btn = buttonWithPoint(point) {
+            if btn.selected==false {
+                btn.selected=true
+                self.selectedButtons.append(btn)
+            }
+            self.setNeedsDisplay()
+        }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         dispatch_async(dispatch_get_main_queue(), {
             NSThread.sleepForTimeInterval(2)
             for var i = 0; i<self.selectedButtons.count; i++ {
@@ -113,21 +111,22 @@ class UILockView: UIView {
         })
     }
     
-    override func touchesCancelled(touches: NSSet!, withEvent event: UIEvent!) {
-        touchesEnded(touches, withEvent: event)
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        touchesEnded(touches!, withEvent: event)
     }
+    
     
     override func drawRect(rect: CGRect) {
         if self.selectedButtons.count==0{
             return
         }
         
-        var path:UIBezierPath = UIBezierPath()
+        let path:UIBezierPath = UIBezierPath()
         path.lineWidth = 8
-        path.lineJoinStyle = kCGLineJoinRound
+        path.lineJoinStyle = CGLineJoin.Round
         
         for var i = 0; i < self.selectedButtons.count; i++ {
-            var btn = self.selectedButtons[i]
+            let btn = self.selectedButtons[i]
             if i == 0 {
                 path.moveToPoint(btn.center)
             }else{
