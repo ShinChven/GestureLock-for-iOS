@@ -30,13 +30,13 @@ class ViewController: UIViewController, PatternDelegate {
         print("patternCreatingRecorded")
     }
 
-    @IBOutlet weak var lock: UILockView!
+    @IBOutlet weak var lock: UIPatternLockView!
     @IBAction func match(sender: AnyObject) {
-        lock.action = UILockView.ACTION_MATCHING
+        lock.action = UIPatternLockView.ACTION_MATCHING
     }
 
     @IBAction func record(sender: AnyObject) {
-        lock.action = UILockView.ACTION_CREATING
+        lock.action = UIPatternLockView.ACTION_CREATING
     }
 
     override func viewDidLoad() {

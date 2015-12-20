@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UILockView: UIView {
+class UIPatternLockView: UIView {
 
     let btnCount = 9
     let btnW: CGFloat = 74.0
@@ -19,7 +19,7 @@ class UILockView: UIView {
     var patternDelegate: PatternDelegate?
     static let ACTION_CREATING = 1
     static let ACTION_MATCHING = 2
-    var action = UILockView.ACTION_MATCHING
+    var action = UIPatternLockView.ACTION_MATCHING
     var matched = true
     var isTouchingAllowed = true
 
@@ -42,6 +42,9 @@ class UILockView: UIView {
         addButtons()
     }
 
+    /**
+    * init buttons
+    */
     func addButtons() {
         var height: CGFloat = 0
         for var i = 0; i < self.btnCount; i++ {
@@ -77,6 +80,9 @@ class UILockView: UIView {
         return point
     }
 
+    /**
+    * finding if I am touching any buttons
+    */
     func buttonWithPoint(point: CGPoint) -> UIButton? {
         for var i = 0; i < self.subviews.count; i++ {
             let btn: UIButton = self.subviews[i] as! UIButton
@@ -158,9 +164,9 @@ class UILockView: UIView {
         if isTouchingAllowed {
             dispatch_async(dispatch_get_main_queue(), {
                 self.isTouchingAllowed = false
-                if self.action == UILockView.ACTION_MATCHING {
+                if self.action == UIPatternLockView.ACTION_MATCHING {
                     self.matching()
-                } else if self.action == UILockView.ACTION_CREATING {
+                } else if self.action == UIPatternLockView.ACTION_CREATING {
                     self.recordingPattern()
                 }
 
